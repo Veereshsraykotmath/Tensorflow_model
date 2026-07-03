@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix,classification_report
 (x_train,y_train),(x_test,y_test)=tf.keras.datasets.mnist.load_data()
+import seaborn as sns
 
 
 
@@ -38,3 +39,26 @@ plt.plot(history.history["accuracy"],label="training accuracy")
 plt.plot(history.history["val_accuracy"],label="val acc")
 plt.legend()
 plt.show()
+
+plt.figure(figsize=(15,8))
+plt.plot(history.history["loss"],label="training loss")
+plt.plot(history.history["val_loss"],label="validation loss")
+plt.legend()
+plt.show()
+
+predictions=model.predict(x_test)
+predictions=np.argmax(predictions,axis=1)
+print(predictions[0])
+
+y_pred=predictions
+cm=confusion_matrix(y_test,y_pred)
+plt.figure(figsize=(15,9))
+sns.heatmap(cm,cmap="Blues",fmt="d")
+plt.show()
+print(classification_report(y_test,y_pred))
+
+#For saving and loading the model
+model.save("mnist.keras")
+print("saved")
+load_model=tf.keras.models.load_model("mnist.keras")
+print("model loaded")
